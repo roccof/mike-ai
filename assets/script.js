@@ -69,7 +69,7 @@ ws.onclose = async () => {
 };
 
 /*
- * Copyed from: 
+ * Copied from: 
  * 	https://github.com/openai/openai-realtime-api-beta/blob/main/lib/utils.js#L30
  */
 function base64ToArrayBuffer(base64) {
@@ -83,7 +83,7 @@ function base64ToArrayBuffer(base64) {
 }
 
 /*
- * Copyed from:
+ * Copied from:
  * 	https://github.com/openai/openai-realtime-api-beta/blob/main/lib/utils.js#L14
  */
 function floatTo16BitPCM(float32Array) {
@@ -98,7 +98,7 @@ function floatTo16BitPCM(float32Array) {
 }
 
 /*
- * Copyed from:
+ * Copied from:
  * 	https://github.com/openai/openai-realtime-api-beta/blob/main/lib/utils.js#L45
  */
 function arrayBufferToBase64(arrayBuffer) {

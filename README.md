@@ -1,3 +1,3 @@
 # MikeAI
 
-Experimental with realtime ai
+Experiments with realtime AI
