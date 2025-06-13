@@ -14,4 +14,4 @@ Mike is an AI that you can talk to, and he'll paint pictures on a canvas in real
    docker run -p 8080:8080 -e OPENAI_API_KEY="your-key" mike-ai
    ```
 
-2. **Open your browser** to http://localhost:8080
+2. **Open your browser** to http://127.0.0.1:8080
