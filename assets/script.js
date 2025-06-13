@@ -1,4 +1,4 @@
-const ws = new WebSocket("ws://localhost:8080/ws");
+const ws = new WebSocket("ws://127.0.0.1:8080/ws");
 const wavRecorder = new WavRecorder({ sampleRate: 24000 });
 const wavStreamPlayer = new WavStreamPlayer({ sampleRate: 24000 });
 let canvas;
@@ -30,7 +30,7 @@ ws.onmessage = async (event) => {
 	if (msg.type == "audio") {
 		wavStreamPlayer.add16BitPCM(base64ToArrayBuffer(msg.audio), "ai-audio");
 	} else if (msg.type == "command.invoke") {
-		const fn = fns[msg.name];
+		const fn = cmds[msg.name];
 		if (fn !== undefined) {
 			console.log(`Calling local function ${msg.name} with ${msg.args}`);
 			const args = JSON.parse(msg.args);
@@ -117,7 +117,7 @@ function arrayBufferToBase64(arrayBuffer) {
 	return btoa(binary);
 }
 
-const fns = {
+const cmds = {
 	getCanvasSize: () => {
 		return { width: canvas.width, height: canvas.height };
 	},
@@ -125,6 +125,28 @@ const fns = {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		return { success: true };
 	},
+	paintCanvas: async (commands) => {
+		console.log("Received paintCanvas command with commands:", commands);
+		commands.commands.forEach(async (cmd) => {
+			const fn = fns[cmd.command];
+			if (fn !== undefined) {
+				console.log(`Invoking command ${cmd.command} with ${cmd.params}`);
+				result =  await fn(cmd.params);
+				if (result.success == false) {
+					console.log(`Command ${cmd.command} failed`);
+					return { success: false, error: "command failed" };
+				}
+			} else {
+				console.log(`Command ${cmd.command} not found`);
+				return { success: false, error: "command not found" };
+			}
+		});
+
+		return { success: true, commands};
+	},
+}
+
+const fns = {
 	fillRect: ({ x, y, width, height }) => {
 		ctx.fillRect(x, y, width, height);
 		return { success: true, x, y, width, height };

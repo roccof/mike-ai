@@ -1,0 +1,530 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "paintCanvas Function Call",
+  "description": "Schema for canvas painting commands that can be executed to create artwork",
+  "type": "object",
+  "properties": {
+    "commands": {
+      "type": "array",
+      "description": "Array of canvas drawing commands to be executed sequentially",
+      "items": {
+        "anyOf": [
+          {
+            "type": "object",
+            "description": "Draws a filled rectangle on the canvas",
+            "properties": {
+              "command": { "const": "fillRect" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "x": { "type": "number", "description": "X coordinate of the rectangle's top-left corner in pixels" },
+                  "y": { "type": "number", "description": "Y coordinate of the rectangle's top-left corner in pixels" },
+                  "width": { "type": "number", "description": "Width of the rectangle in pixels" },
+                  "height": { "type": "number", "description": "Height of the rectangle in pixels" }
+                },
+                "required": ["x", "y", "width", "height"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Draws a rectangular outline (stroke) on the canvas",
+            "properties": {
+              "command": { "const": "strokeRect" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "x": { "type": "number", "description": "X coordinate of the rectangle's top-left corner in pixels" },
+                  "y": { "type": "number", "description": "Y coordinate of the rectangle's top-left corner in pixels" },
+                  "width": { "type": "number", "description": "Width of the rectangle in pixels" },
+                  "height": { "type": "number", "description": "Height of the rectangle in pixels" }
+                },
+                "required": ["x", "y", "width", "height"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Clears a rectangular area on the canvas, making it fully transparent",
+            "properties": {
+              "command": { "const": "clearRect" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "x": { "type": "number", "description": "X coordinate of the rectangle's top-left corner in pixels" },
+                  "y": { "type": "number", "description": "Y coordinate of the rectangle's top-left corner in pixels" },
+                  "width": { "type": "number", "description": "Width of the rectangle to clear in pixels" },
+                  "height": { "type": "number", "description": "Height of the rectangle to clear in pixels" }
+                },
+                "required": ["x", "y", "width", "height"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Starts a new path for drawing complex shapes",
+            "properties": { "command": { "const": "beginPath" } },
+            "required": ["command"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Closes the current path by drawing a line to the starting point",
+            "properties": { "command": { "const": "closePath" } },
+            "required": ["command"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Draws the outline of the current path",
+            "properties": { "command": { "const": "stroke" } },
+            "required": ["command"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Fills the current path with the current fill style",
+            "properties": { "command": { "const": "fill" } },
+            "required": ["command"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Moves the drawing cursor to a specific point without drawing",
+            "properties": {
+              "command": { "const": "moveTo" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "x": { "type": "number", "description": "X coordinate to move to in pixels" },
+                  "y": { "type": "number", "description": "Y coordinate to move to in pixels" }
+                },
+                "required": ["x", "y"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Draws a straight line from the current position to the specified point",
+            "properties": {
+              "command": { "const": "lineTo" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "x": { "type": "number", "description": "X coordinate to draw line to in pixels" },
+                  "y": { "type": "number", "description": "Y coordinate to draw line to in pixels" }
+                },
+                "required": ["x", "y"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Draws an arc (part of a circle) at the specified position",
+            "properties": {
+              "command": { "const": "arc" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "x": { "type": "number", "description": "X coordinate of the arc's center in pixels" },
+                  "y": { "type": "number", "description": "Y coordinate of the arc's center in pixels" },
+                  "radius": { "type": "number", "description": "Radius of the arc in pixels" },
+                  "startAngle": { "type": "number", "description": "Starting angle in radians (0 = right side of circle)" },
+                  "endAngle": { "type": "number", "description": "Ending angle in radians" },
+                  "counterclockwise": { "type": "boolean", "description": "Whether to draw counterclockwise (true) or clockwise (false)" }
+                },
+                "required": ["x", "y", "radius", "startAngle", "endAngle", "counterclockwise"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Draws an arc with control points and radius, connected to the previous point",
+            "properties": {
+              "command": { "const": "arcTo" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "x1": { "type": "number", "description": "X coordinate of the first control point in pixels" },
+                  "y1": { "type": "number", "description": "Y coordinate of the first control point in pixels" },
+                  "x2": { "type": "number", "description": "X coordinate of the second control point in pixels" },
+                  "y2": { "type": "number", "description": "Y coordinate of the second control point in pixels" },
+                  "radius": { "type": "number", "description": "Radius of the arc in pixels" }
+                },
+                "required": ["x1", "y1", "x2", "y2", "radius"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Draws a quadratic Bézier curve with one control point",
+            "properties": {
+              "command": { "const": "quadraticCurveTo" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "cp1x": { "type": "number", "description": "X coordinate of the control point in pixels" },
+                  "cp1y": { "type": "number", "description": "Y coordinate of the control point in pixels" },
+                  "x": { "type": "number", "description": "X coordinate of the end point in pixels" },
+                  "y": { "type": "number", "description": "Y coordinate of the end point in pixels" }
+                },
+                "required": ["cp1x", "cp1y", "x", "y"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Draws a cubic Bézier curve with two control points",
+            "properties": {
+              "command": { "const": "bezierCurveTo" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "cp1x": { "type": "number", "description": "X coordinate of the first control point in pixels" },
+                  "cp1y": { "type": "number", "description": "Y coordinate of the first control point in pixels" },
+                  "cp2x": { "type": "number", "description": "X coordinate of the second control point in pixels" },
+                  "cp2y": { "type": "number", "description": "Y coordinate of the second control point in pixels" },
+                  "x": { "type": "number", "description": "X coordinate of the end point in pixels" },
+                  "y": { "type": "number", "description": "Y coordinate of the end point in pixels" }
+                },
+                "required": ["cp1x", "cp1y", "cp2x", "cp2y", "x", "y"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Creates a rectangular path without drawing it",
+            "properties": {
+              "command": { "const": "rect" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "x": { "type": "number", "description": "X coordinate of the rectangle's top-left corner in pixels" },
+                  "y": { "type": "number", "description": "Y coordinate of the rectangle's top-left corner in pixels" },
+                  "width": { "type": "number", "description": "Width of the rectangle in pixels" },
+                  "height": { "type": "number", "description": "Height of the rectangle in pixels" }
+                },
+                "required": ["x", "y", "width", "height"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the fill color for filled shapes",
+            "properties": {
+              "command": { "const": "setFillStyle" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "color": { "type": "string", "description": "Color in hex format (#RRGGBB) or rgba format (rgba(r, g, b, a))" }
+                },
+                "required": ["color"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the stroke color for outlines and lines",
+            "properties": {
+              "command": { "const": "setStrokeStyle" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "color": { "type": "string", "description": "Color in hex format (#RRGGBB) or rgba format (rgba(r, g, b, a))" }
+                },
+                "required": ["color"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the global transparency level for all drawing operations",
+            "properties": {
+              "command": { "const": "setGlobalAlpha" },
+              "params": {
+                "type": "object",								
+                "properties": {
+                  "alpha": { "type": "number", "minimum": 0, "maximum": 1, "description": "Alpha transparency value from 0.0 (fully transparent) to 1.0 (fully opaque)" }
+                },
+                "required": ["alpha"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the width of lines and strokes",
+            "properties": {
+              "command": { "const": "setLineWidth" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "width": { "type": "number", "description": "Line width in pixels (must be positive)" }
+                },
+                "required": ["width"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the style of line endings",
+            "properties": {
+              "command": { "const": "setLineCap" },
+              "params": {
+                "type": "object",								
+                "properties": {
+                  "cap": { "type": "string", "enum": ["butt", "round", "square"], "description": "Line cap style: 'butt' (flat), 'round' (rounded), or 'square' (squared)" }
+                },
+                "required": ["cap"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the style of line joins where lines meet",
+            "properties": {
+              "command": { "const": "setLineJoin" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "join": { "type": "string", "enum": ["bevel", "round", "miter"], "description": "Line join style: 'bevel' (cut corner), 'round' (rounded corner), or 'miter' (sharp corner)" }
+                },
+                "required": ["join"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the maximum miter length for sharp line joins",
+            "properties": {
+              "command": { "const": "setMiterLimit" },
+              "params": {
+                "type": "object",
+                "properties": {
+                  "limit": { "type": "number", "description": "Maximum miter length ratio (must be positive)" }
+                },
+                "required": ["limit"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the horizontal distance of shadow effects",
+            "properties": { "command": { "const": "setShadowOffsetX" },
+              "params": {
+                "type": "object",								
+                "properties": {
+                  "offsetX": { "type": "number", "description": "Horizontal shadow offset in pixels (positive = right, negative = left)" }
+                },
+                "required": ["offsetX"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the vertical distance of shadow effects",
+            "properties": { "command": { "const": "setShadowOffsetY" },
+              "params": {
+                "type": "object",								
+                "properties": {
+                  "offsetY": { "type": "number", "description": "Vertical shadow offset in pixels (positive = down, negative = up)" }
+                },
+                "required": ["offsetY"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the blur amount for shadow effects",
+            "properties": { "command": { "const": "setShadowBlur" },
+              "params": {
+                "type": "object",								
+                "properties": {
+                  "blur": { "type": "number", "description": "Shadow blur amount in pixels (0 = sharp shadow, higher = more blurred)" }
+                },
+                "required": ["blur"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the color of shadow effects",
+            "properties": { "command": { "const": "setShadowColor" },
+              "params": {
+                "type": "object",								
+                "properties": {
+                  "color": { "type": "string", "description": "Shadow color in hex format (#RRGGBB) or rgba format (rgba(r, g, b, a))" }
+                },
+                "required": ["color"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Draws filled text on the canvas",
+            "properties": { "command": { "const": "fillText" },
+              "params": {
+                "type": "object",								
+                "properties": {
+                  "text": { "type": "string", "description": "The text string to draw" },
+                  "x": { "type": "number", "description": "X coordinate where the text starts in pixels" },
+                  "y": { "type": "number", "description": "Y coordinate of the text baseline in pixels" }
+                },
+                "required": ["text", "x", "y"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Draws stroked (outlined) text on the canvas",
+            "properties": { "command": { "const": "strokeText" },
+              "params": {
+                "type": "object",								
+                "properties": {
+                  "text": { "type": "string", "description": "The text string to draw" },
+                  "x": { "type": "number", "description": "X coordinate where the text starts in pixels" },
+                  "y": { "type": "number", "description": "Y coordinate of the text baseline in pixels" }
+                },
+                "required": ["text", "x", "y"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the font style for text drawing",
+            "properties": { "command": { "const": "setFont" },
+              "params": {
+                "type": "object",								
+                "properties": {
+                  "font": { "type": "string", "description": "Font specification in CSS format (e.g., '20px Arial', 'bold 16px serif')" }
+                },
+                "required": ["font"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the horizontal alignment of text",
+            "properties": { "command": { "const": "setTextAlign" },
+              "params": {
+                "type": "object",								
+                "properties": {
+                  "align": { "type": "string", "enum": ["start", "end", "left", "right", "center"], "description": "Text alignment: 'start' (default), 'end', 'left', 'right', or 'center'" }
+                },
+                "required": ["align"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the vertical alignment baseline for text",
+            "properties": { "command": { "const": "setTextBaseline" },
+              "params": {
+                "type": "object",								
+                "properties": {
+                  "baseline": { "type": "string", "enum": ["top", "hanging", "middle", "alphabetic", "ideographic", "bottom"], "description": "Text baseline: 'top', 'hanging', 'middle', 'alphabetic' (default), 'ideographic', or 'bottom'" }
+                },
+                "required": ["baseline"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "description": "Sets the text direction for writing systems",
+            "properties": { "command": { "const": "setTextDirection" },
+              "params": {
+                "type": "object",								
+                "properties": {
+                  "direction": { "type": "string", "enum": ["ltr", "rtl", "inherit"], "description": "Text direction: 'ltr' (left-to-right), 'rtl' (right-to-left), or 'inherit' (use parent direction)" }
+                },
+                "required": ["direction"],
+                "additionalProperties": false
+              }
+            },
+            "required": ["command", "params"],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "required": ["commands"],
+  "additionalProperties": false
+}
