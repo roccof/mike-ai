@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"mike-ai/service"
 	"mike-ai/wait"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
+	"time"
 
 	openairt "github.com/WqyJh/go-openai-realtime"
 	"github.com/coder/websocket"
@@ -604,6 +606,9 @@ func main() {
 
 	httpd := &http.Server{
 		Addr: ":8080",
+		BaseContext: func(l net.Listener) context.Context {
+			return ctx
+		},
 	}
 
 	fmt.Println("[*] Server started on http://127.0.0.1:8080")
@@ -621,9 +626,12 @@ func main() {
 	stop()
 
 	fmt.Println("[*] Shutting down server...")
-	if err := httpd.Shutdown(context.Background()); err != nil && err != context.Canceled {
+
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	err = httpd.Shutdown(shutdownCtx)
+	if err != nil && err != context.Canceled {
 		fmt.Println("[!!!] Failed to shutdown server:", err)
 	}
-
-	// TODO: close all active connections
 }
